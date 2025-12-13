@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flare Tag</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at top, #220000, #000000 60%);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* ===== EMBER BACKGROUND ===== */
+.embers {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.ember {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: orange;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+    from { transform: translateY(100vh) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    to { transform: translateY(-10vh) scale(0.3); opacity: 0; }
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+.navbar span {
+    cursor: pointer;
+    font-size: 18px;
+    color: #ffb347;
+}
+.navbar span:hover { text-shadow: 0 0 10px orange; }
+
+/* ===== PAGES ===== */
+.page {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+    padding-top: 110px;
+    position: relative;
+    z-index: 1;
+}
+.page.active {
+    display: block;
+    opacity: 1;
+}
+
+h1 {
+    font-size: 56px;
+    text-shadow: 0 0 25px red, 0 0 50px orange;
+}
+
+.button {
+    display: inline-block;
+    padding: 16px 30px;
+    margin: 15px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #ff3300, #ff9900);
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255,120,0,0.6);
+}
+.button:hover { transform: scale(1.05); }
+
+.big-download {
+    font-size: 26px;
+    padding: 22px 45px;
+}
+
+/* ===== GAME CARD ===== */
+.apk-grid {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+.apk-card {
+    background: #111;
+    padding: 25px;
+    border-radius: 20px;
+    width: 320px;
+}
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ff66;
+    box-shadow: 0 0 10px #00ff66;
+    display: inline-block;
+}
+
+/* ===== SCREENSHOTS ===== */
+.shots {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.shot {
+    width: 260px;
+    height: 150px;
+    background: #222;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    transition: transform 0.3s;
+}
+.shot:hover { transform: scale(1.08); }
+
+/* ===== FOOTER ===== */
+.footer {
+    margin-top: 80px;
+    padding: 25px;
+    background: rgba(0,0,0,0.6);
+    color: #aaa;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 38px; }
+    .navbar { gap: 15px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="embers" id="embers"></div>
+
+<div class="navbar">
+    <span onclick="showPage('home')">Home</span>
+    <span onclick="showPage('game')">Game</span>
+    <span onclick="showPage('links')">Links</span>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page active" align="center">
+    <h1>FLARE TAG</h1>
+    <p>Flare Tag, is a Gorilla Tag copy that switch's updates every Week</p>
+    <p>Status: <span class="status-dot"></span> <b>ONLINE APPLAB</b></p>
+
+    <div class="button big-download" onclick="showPage('game')">🔥 View Game</div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="page" align="center">
+    <h1> </h1>
+
+    <div class="apk-grid">
+        <div class="apk-card">
+            <h2>Flare Tag</h2>
+            <p>Current Version: <b>v0.3.1</b></p>
+            <p>Status: <span class="status-dot"></span> On Applab</p>
+            <a class="button" href="#">Visit on Meta</a>
+        </div>
+    </div>
+
+    <h2>Screenshots</h2>
+    <div class="shots">
+        <div class="shot">Screenshot</div>
+        <div class="shot">Screenshot</div>
+        <div class="shot">Screenshot</div>
+    </div>
+</div>
+
+<!-- LINKS -->
+<div id="links" class="page" align="center">
+    <h1>LINKS</h1>
+    <a class="button" href="https://discord.gg/s68UrnaaDv" target="_blank">💬 Discord</a><br>
+    <a class="button" href="https://www.youtube.com" target="_blank">📺 YouTube</a><br>
+    <a class="button" href="https://www.tiktok.com/@soloristag?_r=1&_t=ZT-92AyrIJuAlK" target="_blank">🎵 TikTok</a>
+</div>
+
+<div class="footer" align="center">
+    © 2025 Flare Tag — Owned by itsdakozy
+</div>
+
+<script>
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// EMBERS
+const emberBox = document.getElementById('embers');
+for (let i = 0; i < 40; i++) {
+    const e = document.createElement('div');
+    e.className = 'ember';
+    e.style.left = Math.random() * 100 + 'vw';
+    e.style.animationDuration = 6 + Math.random() * 8 + 's';
+    e.style.animationDelay = Math.random() * 5 + 's';
+    emberBox.appendChild(e);
+}
+</script>
+
+</body>
+</html>
