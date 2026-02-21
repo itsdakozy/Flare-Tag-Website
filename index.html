@@ -1,441 +1,450 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<link rel="icon" type="image/png" href="favicon.png">
-<meta charset="UTF-8">
-<title>Flare Tag</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google ClassRoom</title>
+    <style>
+        html, body {
+            overflow: auto;  
+            scrollbar-width: none;  
+            -ms-overflow-style: none;  
+        }
+        body::-webkit-scrollbar {
+            display: none;  
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;  /* default background white */
+            color: black;       /* default text black */
+            transition: background 0.3s, color 0.3s; /* smooth dark mode */
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 40px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-top: 50px;
+        }
+        .game-box {
+            border: 2px dashed black;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .game-box:hover {
+            background: rgba(0,0,0,0.05);
+            transform: scale(1.03);
+        }
+        .game-box a {
+            color: #0077cc;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .game-box a:hover {
+            text-decoration: underline;
+        }
 
-<style>
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(circle at top, #220000, #000000 60%);
-    color: white;
-    overflow-x: hidden;
-}
-
-/* ===== EMBER BACKGROUND ===== */
-.embers {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-.ember {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: orange;
-    border-radius: 50%;
-    opacity: 0.7;
-    animation: floatUp linear infinite;
-}
-@keyframes floatUp {
-    from { transform: translateY(100vh) scale(1); opacity: 0; }
-    20% { opacity: 1; }
-    to { transform: translateY(-10vh) scale(0.3); opacity: 0; }
-}
-
-/* ===== NAVBAR ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(10px);
-    z-index: 10;
-}
-.navbar span {
+#cloakTabBtn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #ff4444; /* text color */
+    font-size: 16px;
     cursor: pointer;
-    font-size: 18px;
-    color: #ffb347;
-}
-.navbar span:hover { text-shadow: 0 0 10px orange; }
-
-/* ===== PAGES ===== */
-.page {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.4s;
-    padding-top: 110px;
-    position: relative;
-    z-index: 1;
-}
-.page.active {
-    display: block;
-    opacity: 1;
 }
 
-h1 {
-    font-size: 56px;
-    text-shadow: 0 0 25px red, 0 0 50px orange;
-}
+        /* Moving lines */
+        .lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .line {
+            position: absolute;
+            height: 2px;
+            background: black;
+            opacity: 0.1;
+            animation: moveLine linear forwards;
+        }
+        @keyframes moveLine {
+            from { left: -200px; }
+            to { left: 110%; }
+        }
 
-.button {
-    display: inline-block;
-    padding: 16px 30px;
-    margin: 15px;
-    border-radius: 14px;
-    background: linear-gradient(90deg, #ff3300, #ff9900);
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 0 25px rgba(255,120,0,0.6);
-}
-.button:hover { transform: scale(1.05); }
+        /* Settings icon and dropdown */
+        .settings {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1000;
+        }
 
-.big-download {
-    font-size: 26px;
-    padding: 22px 45px;
-}
+ .dropdown {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid black;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .dropdown label, .dropdown button {
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        .dropdown input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .dropdown button {
+            background: #ff4444;
+            border: none;
+            padding: 5px 10px;
+        }
 
-/* ===== CARDS ===== */
-.apk-grid {
+.dropdown-item {
+    border: 1px solid #ccc;      /* box border */
+    padding: 8px 12px;           /* spacing inside box */
+    margin: 5px 0;               /* spacing between boxes */
+    border-radius: 5px;           /* rounded corners */
+    background: rgba(255,255,255,0.1);  /* light background */
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 40px;
-}
-.apk-card {
-    background: #111;
-    padding: 25px;
-    border-radius: 20px;
-    width: 265px;
-
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;              /* shows clickable */
+    transition: 0.2s;
 }
 
-.apk-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(255,120,0,0.6);
-
-}
-.status-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #00ff66;
-    box-shadow: 0 0 10px #00ff66;
-    display: inline-block;
+.dropdown-item:hover {
+    background: rgba(255,255,255,0.2); /* hover effect */
 }
 
-/* ===== SCREENSHOTS ===== */
-.shots {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
+/* For dark mode */
+body.dark-mode .dropdown-item {
+    border-color: #555;
+    background: rgba(255,255,255,0.05);
 }
-.shot {
-    width: 260px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 16px;
-    transition: transform 0.3s;
-}
-.shot:hover { transform: scale(1.08); }
-
-/* ===== FOOTER ===== */
-.footer {
-    margin-top: 80px;
-    padding: 25px;
-    background: rgba(0,0,0,0.6);
-    color: #aaa;
-}
-
-@media (max-width: 600px) {
-    h1 { font-size: 38px; }
-    .navbar { gap: 15px; }
-}
-#links .button {
-    width: 170px;
-    text-align: center;
-
-}
-.apk-card .button {
-    opacity: 1;
-    visibility: visible;
-    display: inline-block;
-    background: linear-gradient(90deg, #ff3300, #ff9900);
-    color: white;
-}
-#staff h2 {
-    font-size: 20px;
-}
-
-</style>
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="embers" id="embers"></div>
+<div class="lines"></div>
 
-<div class="navbar">
-    <span onclick="showPage('home')">Home</span>
-    <span onclick="showPage('game')">Game</span>
-    <span onclick="showPage('rules')">Rules</span>
-    <span onclick="showPage('staff')">Staff</span>
-    <span onclick="showPage('links')">Links</span>
-    <span onclick="showPage('contact')">Contact</span>
-</div>
+<h1>Famus</h1>
 
-<!-- HOME -->
-<div id="home" class="page active" align="center">
-    <h1>FLARE TAG</h1>
-    <p>Flare Tag, is a Gorilla Tag copy that switch's updates every Week</p>
-    <p>Status: <span class="status-dot"></span> <b> ON APPLAB!</b></p>
-    <div class="button big-download" onclick="showPage('game')">View Game</div>
-</div>
+<div class="settings">&#9881;</div> <!-- gear icon -->
 
-<!-- GAME -->
-<div id="game" class="page" align="center">
-    <div class="apk-grid">
-        <div class="apk-card">
-            <h2>Flare Tag</h2>
-            <p>Current Update: <b>XMAS 24</b></p>
-            <p>Status: <span class="status-dot"></span> ON APPLAB</p>
-            <a class="button" href="https://www.meta.com/en-gb/experiences/jolly-tag/9701639246626692/" target="_blank">Visit on Meta</a><br>
-        </div>
+<div class="dropdown">
+
+    <div class="dropdown-item">
+        <label>
+            <input type="checkbox" id="darkModeToggle"> Dark Mode
+        </label>
     </div>
 
-    <h2>Screenshots</h2>
-    <div class="shots">
-        <img src="shot1.png" class="shot">
-        <img src="shot2.png" class="shot">
-        <img src="shot3.png" class="shot">
+    <div class="dropdown-item">
+        <button id="cloakTabBtn">Cloak Tab</button>
     </div>
-</div>
 
-<!-- RULES -->
-<div id="rules" class="page" align="center">
-    <h1>RULES</h1>
-
-    <div class="apk-grid">
-        <div class="apk-card">
-            <h2>INGAME RULES</h2>
-            <p>No cheating or modding</p>
-            <p>No exploiting</p>
-            <p>No Glitching</p>
-            <p>No harassment or hate speech</p>
-            <p>No voice chat spamming or soundboards</p>
-            <p>Do not impersonate staff members</p>
-            <p>Follow staff instructions at all times</p>
-        </div>
-
-        <div class="apk-card">
-            <h2>SERVER RULES</h2>
-            <p>No harassment</p>
-            <p>No spamming</p>
-            <p>No hate speech</p>
-            <p>No Inappropriate Language</p>
-            <p>No offensive names and profile pictures</p>
-            <p>Follow the Discord Community Guidelines</p>
-            <p>https://discordapp.com/guidelines</p>
-        </div>
+    <div class="dropdown-item">
+        <label>Panic Key: <input type="text" id="panicKey" placeholder="Press a key"></label>
     </div>
-</div>
 
-<!-- STAFF -->
-<div id="staff" class="page" align="center">
-    <h1>STAFF</h1>
-
-    <div class="apk-grid">
-        <div class="apk-card">
-            <h2>👑 Itsdakozy</h2>
-            <p>Owner</p>
-        </div>
-        <div class="apk-card">
-            <h2>🛡️ Vex</h2>
-            <p>Playfab Manager</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 Fruit.gg</h2>
-            <p>Head Moderator</p>
-	</div>
-        <div class="apk-card">
-            <h2>🔧 Guinea pig</h2>
-            <p>Head Moderator</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 Standalone</h2>
-            <p>Moderator</p>
-	 </div>
-        <div class="apk-card">
-            <h2>🔧 MonkmonkeVR</h2>
-            <p>Moderator</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 Galactic</h2>
-            <p>Moderator</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 . ᴬ⁹ Felix</h2>
-            <p>Moderator</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 Asteroid </h2>
-            <p>Moderator</p>
-        </div>
-        <div class="apk-card">
-            <h2>🔧 EvnoVR</h2>
-            <p>Moderator</p>
-	</div>
-        <div class="apk-card">
-            <h2>🔧 KK2Shify</h2>
-            <p>Moderator</p>
-	</div>
-        <div class="apk-card">
-            <h2>🔧 bs.</h2>
-            <p>Moderator</p>
-	</div>
-        <div class="apk-card">
-            <h2>🔧 KK2Shify</h2>
-            <p>Moderator</p>
-	
-        </div>
+    <div class="dropdown-item">
+        <label>Panic Redirect URL: <input type="text" id="panicUrl" placeholder="https://example.com"></label>
     </div>
+
 </div>
 
-<!-- LINKS -->
-<div id="links" class="page" align="center">
-    <h1>LINKS</h1>
-    <a class="button" href="https://discord.gg/s68UrnaaDv" target="_blank">Discord</a><br>
-    <a class="button" href="https://www.youtube.com" target="_blank">Youtube</a><br>
-    <a class="button" href="https://www.tiktok.com/@soloristag?_r=1&_t=ZT-92AyrIJuAlK" target="_blank">  Tiktok</a>
+<div style="text-align:center; margin:20px 0;">
+    <input type="text" id="gameSearch" placeholder="Search games..." style="width:60%; padding:10px; font-size:16px;">
 </div>
-<!-- CONTACT -->
-<div id="contact" class="page" align="center">
-    <h1>CONTACT US</h1>
 
-    <div class="apk-card" style="max-width:420px;">
-        <input id="cname" placeholder="Your name" style="width:100%;padding:12px;margin-bottom:10px;border-radius:10px;border:none;">
-        <input id="cemail" placeholder="Your email" style="width:100%;padding:12px;margin-bottom:10px;border-radius:10px;border:none;">
-        <input id="csubject" placeholder="Subject" style="width:100%;padding:12px;margin-bottom:10px;border-radius:10px;border:none;">
-        <textarea id="cmessage" placeholder="Your message" style="width:100%;padding:12px;height:120px;border-radius:10px;border:none;"></textarea>
-
-        <div class="button" onclick="sendContact()">Send Message</div>
-
-<!-- SEND MESSAGES -->
-        <div id="contactStatus" style="
-            margin-top:12px;
-            font-size:14px;
-            color:#ffb347;
-            min-height:18px;
-    "></div>
+<div class="container">
+    <div class="game-box">
+        <a href="https://sites.google.com/view/ezclasswork/" target="_blank">EzClasswork</a>
     </div>
-</div>
+
+    <div class="game-box">
+        <a href="https://ubg4school.gitlab.io/" target="_blank">Ubg Unblocked Games</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://ubg4school.gitlab.io/" target="_blank">Project Ubg</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://quizfox.sbs/" target="_blank">Proxy</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://buy.terracotacafe.cl/" target="_blank">Proxy 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://ovo-alpha.vercel.app/versions/1.4.5/index.html" target="_blank">OVO MODDED</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://calcsolver.net/" target="_blank">Cal Solver</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://gn-math.dev/?id=35" target="_blank">GN Math</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/apps.everettsd.org/gn-math/home" target="_blank">GN Math 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://plnkr.co/plunk/fyMz1Smn2XP2dde1" target="_blank">GN Math 3</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/gn-math67/gn-math1?authuser=0" target="_blank">GN Math 4</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/gn-math67/gn-math2?authuser=0" target="_blank">GN Math 5</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/site/unblockedgame67/" target="_blank">Unblocked Games 67</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/classroom.center/view/" target="_blank">Unblocked Games G+</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/site/unblockedgames77/freezenova?authuser=0" target="_blank">Unblocked Games 77</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://bookblooom.netlify.app/" target="_blank">BookBloom</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://learn-sphere.info/" target="_blank">BookBloom 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/fus3-bomb/gm43s" target="_blank">Bomb Games</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/noahs-tutoring-hub" target="_blank">Noah's Tutoring games</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://bestclass.global.ssl.fastly.net/index.html" target="_blank">FreezeNova</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/freezenova/" target="_blank">FreezaNova 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/site/allfunblockedgames/home?authuser=0" target="_blank">FunBlocked</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/nghhub/home?authuser=0" target="_blank">NGH Unblocked games</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/squarecode/home?authuser=0" target="_blank">SquareCode</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/bypass-central/home?authuser=0" target="_blank">B-Central</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/aldensgames/home?authuser=0" target="_blank">Aldens Unblocked games</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://download.brightpathlearning.website/" target="_blank">Waves Unblocked game</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://meowmeow.polden21vek.com/" target="_blank">Waves Unblocked game 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://assignments.cinosargoediciones.com/" target="_blank">Waves Unblocked game 3</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/site/unblockedgamestop" target="_blank">Unblocked games stop</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://www.transum.org/Maths/Game/Tetris/" target="_blank">Tetris</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://classroom6x.us.com/" target="_blank">Classroom 6x</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/unblockedgame/home" target="_blank">classroom 6x 2</a>
+    </div>
+
+    <div class="game-box">
+        <a href="https://sites.google.com/view/classroom6x/" target="_blank">Classroom 6x 3</a>
+    </div>
+
+    <div class="game-box">
+        <a href="GAME_LINK_HERE" target="_blank">GAME_NAME_HERE</a>
+    </div>
 
 
-<div class="footer" align="center">
-    © 2025 Flare Tag — Owned by itsdakozy
 </div>
+
+</script>
 
 <script>
-function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+// Moving lines effect
+const container = document.querySelector('.lines');
+function createLine() {
+    const line = document.createElement('div');
+    line.classList.add('line');
+    line.style.top = Math.random() * 100 + '%';
+    line.style.width = (100 + Math.random() * 200) + 'px';
+    const duration = 2 + Math.random() * 3;
+    line.style.animationDuration = duration + 's';
+    container.appendChild(line);
+    setTimeout(() => line.remove(), duration * 1000);
 }
+setInterval(createLine, 150);
 
-// EMBERS
-const emberBox = document.getElementById('embers');
-for (let i = 0; i < 40; i++) {
-    const e = document.createElement('div');
-    e.className = 'ember';
-    e.style.left = Math.random() * 100 + 'vw';
-    e.style.animationDuration = 6 + Math.random() * 8 + 's';
-    e.style.animationDelay = Math.random() * 5 + 's';
-    emberBox.appendChild(e);
-}
-const COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutes
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1451722217217069058/-W96KjelusNnmXUzHPwcLsL2D0Xif0nMHR9d5tgK5omJRGxG8ArK8evmBom68aBaFw54";
+// Settings toggle
+const settingsIcon = document.querySelector('.settings');
+const dropdown = document.querySelector('.dropdown');
+settingsIcon.addEventListener('click', () => {
+    dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+});
 
-function setStatus(text, good = false) {
-    const el = document.getElementById("contactStatus");
-    el.textContent = text;
-    el.style.color = good ? "#6cff6c" : "#ff6c6c";
-}
+// Dark Mode toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('change', () => {
+    const labels = document.querySelectorAll('.dropdown label'); 
+    const inputs = document.querySelectorAll('.dropdown input');
+    const dropdown = document.querySelector('.dropdown');
 
-function sendContact() {
-    const lastSent = localStorage.getItem("lastContactSent");
-    const now = Date.now();
+    if (darkModeToggle.checked) {
+        // Body
+        document.body.style.background = '#111';
+        document.body.style.color = '#e0e0e0';
 
-    if (lastSent && now - lastSent < COOLDOWN_TIME) {
-        const remaining = Math.ceil((COOLDOWN_TIME - (now - lastSent)) / 1000);
-        setStatus("Please wait " + remaining + " seconds before sending another message.");
-        return;
+        // Game boxes
+        document.querySelectorAll('.game-box').forEach(box => {
+            box.style.borderColor = '#ccc';
+            box.style.background = 'rgba(255,255,255,0.05)';
+        });
+        document.querySelectorAll('.game-box a').forEach(a => {
+            a.style.color = '#4fc3f7';
+        });
+
+        // Dropdown background and labels
+        dropdown.style.background = 'rgba(34,34,34,0.95)'; // dark dropdown
+        labels.forEach(label => {
+            label.style.color = '#e0e0e0'; // light text for labels
+        });
+
+        // Inputs
+        inputs.forEach(input => {
+            input.style.background = '#222';
+            input.style.color = '#e0e0e0';
+            input.style.border = '1px solid #555';
+        });
+
+    } else {
+        // Light mode
+        document.body.style.background = 'white';
+        document.body.style.color = 'black';
+
+        document.querySelectorAll('.game-box').forEach(box => {
+            box.style.borderColor = 'black';
+            box.style.background = '';
+        });
+        document.querySelectorAll('.game-box a').forEach(a => {
+            a.style.color = '#0077cc';
+        });
+
+        // Dropdown background and labels
+        dropdown.style.background = 'rgba(255,255,255,0.95)';
+        labels.forEach(label => {
+            label.style.color = 'black';
+        });
+
+        // Inputs
+        inputs.forEach(input => {
+            input.style.background = 'white';
+            input.style.color = 'black';
+            input.style.border = '1px solid black';
+        });
     }
+});
 
-    const name = document.getElementById("cname").value.trim();
-    const email = document.getElementById("cemail").value.trim();
-    const subject = document.getElementById("csubject").value.trim();
-    const message = document.getElementById("cmessage").value.trim();
+// Cloak Tab (just change tab title)
+document.getElementById('cloakTabBtn').addEventListener('click', () => {
+    document.title = 'Google Classroom'; // tab title
+    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = 'https://www.google.com/favicon.ico'; // Google favicon
+    document.getElementsByTagName('head')[0].appendChild(link);
+});
 
-    const badWords = ["fuck","shit","bitch","asshole","nigger","faggot"];
+const gameSearchInput = document.getElementById('gameSearch');
+gameSearchInput.addEventListener('input', () => {
+    const filter = gameSearchInput.value.toLowerCase();
+    document.querySelectorAll('.game-box').forEach(box => {
+        const text = box.textContent.toLowerCase();
+        box.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        setStatus("Invalid email address");
-        return;
-    }
+// Panic functionality (works every time)
+let panicKey = null;
+let panicUrl = null;
 
-    if (message.length < 5) {
-        setStatus("Message is too short");
-        return;
-    }
+const panicKeyInput = document.getElementById('panicKey');
+panicKeyInput.addEventListener('keydown', (e) => {
+    panicKey = e.key.toLowerCase();
+    panicKeyInput.value = panicKey.toUpperCase();
+    e.preventDefault();
+});
 
-    for (let w of badWords) {
-        if (message.toLowerCase().includes(w)) {
-            setStatus("Please remove inappropriate language");
-            return;
+const panicUrlInput = document.getElementById('panicUrl');
+panicUrlInput.addEventListener('change', (e) => {
+    panicUrl = e.target.value;
+});
+
+document.addEventListener('keydown', (e) => {
+    if(panicKey && e.key.toLowerCase() === panicKey) {
+        if(panicUrl) {
+            window.location.href = panicUrl;
         }
     }
-
-    setStatus("Sending message...", true);
-
-    fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            embeds: [{
-                title: "📩 New Contact Message",
-                color: 16744192,
-                fields: [
-                    { name: "Name", value: name || "N/A" },
-                    { name: "Email", value: email },
-                    { name: "Subject", value: subject || "N/A" },
-                    { name: "Message", value: message }
-                ],
-                footer: { text: "Flare Tag Website" },
-                timestamp: new Date()
-            }]
-        })
-    })
-    .then(() => {
-        localStorage.setItem("lastContactSent", Date.now());
-        setStatus("Message sent successfully!", true);
-
-        document.getElementById("cname").value = "";
-        document.getElementById("cemail").value = "";
-        document.getElementById("csubject").value = "";
-        document.getElementById("cmessage").value = "";
-    })
-    .catch(() => {
-        setStatus("Failed to send message. Try again later.");
-    });
-}
+});
 </script>
-}
-
 </body>
 </html>
-
-
