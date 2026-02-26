@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Google ClassRoom</title>
+    <title>Google Classroom</title>
     <style>
         html, body {
             overflow: auto;  
@@ -34,6 +34,7 @@
             margin: 40px 0;
             text-align: center;
             transition: 0.3s;
+            display: none;
         }
         .game-box:hover {
             background: rgba(0,0,0,0.05);
@@ -47,6 +48,45 @@
         .game-box a:hover {
             text-decoration: underline;
         }
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: gray;
+    padding: 10px;
+    text-align: center;
+    z-index: 2000;
+}
+
+.top-nav button {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 18px;
+    margin: 0 20px;
+    cursor: pointer;
+}
+
+.top-nav button:hover {
+    text-decoration: underline;
+}
+
+#viewer {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px);
+    background: white;
+    z-index: 2000;
+}
+
+#viewer iframe {
+    width: 100%;
+    height: 95%;
+}
+
 
 #cloakTabBtn {
     background: none;
@@ -87,7 +127,7 @@
             right: 20px;
             font-size: 30px;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 3000;
         }
 
  .dropdown {
@@ -141,6 +181,20 @@ body.dark-mode .dropdown-item {
 </head>
 <body>
 
+<!-- Top Navigation -->
+<div class="top-nav">
+    <button onclick="showSection('games')">Games</button>
+    <button onclick="showSection('websites')">Websites</button>
+</div>
+
+<!-- Embedded Viewer -->
+<div id="viewer" style="display:none; padding:10px; background:#f0f0f0;">
+    <button id="backBtn">⬅ Back</button>
+    <button id="fullScreenBtn">Full Screen</button>
+    <button id="aboutBlankBtn">About:Blank</button>
+    <iframe id="embedFrame" src="" frameborder="0"></iframe>
+</div>
+
 <div class="lines"></div>
 
 <h1>Famus</h1>
@@ -167,6 +221,10 @@ body.dark-mode .dropdown-item {
         <label>Panic Redirect URL: <input type="text" id="panicUrl" placeholder="https://example.com"></label>
     </div>
 
+    <div class="dropdown-item">
+        <button id="openSiteBlankBtn">Open in About:Blank</button>
+    </div>
+
 </div>
 
 <div style="text-align:center; margin:20px 0;">
@@ -174,147 +232,148 @@ body.dark-mode .dropdown-item {
 </div>
 
 <div class="container">
-    <div class="game-box">
+
+	<div class="game-box" data-type="games">
+    		<a href="#" data-url="https://www.transum.org/Maths/Game/Tetris/">Tetris</a>
+	</div>
+
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/ezclasswork/" target="_blank">EzClasswork</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://ubg4school.gitlab.io/" target="_blank">Ubg Unblocked Games</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://ubg4school.gitlab.io/" target="_blank">Project Ubg</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://quizfox.sbs/" target="_blank">Proxy</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://buy.terracotacafe.cl/" target="_blank">Proxy 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://ovo-alpha.vercel.app/versions/1.4.5/index.html" target="_blank">OVO MODDED</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://calcsolver.net/" target="_blank">Cal Solver</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://gn-math.dev/?id=35" target="_blank">GN Math</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/apps.everettsd.org/gn-math/home" target="_blank">GN Math 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://plnkr.co/plunk/fyMz1Smn2XP2dde1" target="_blank">GN Math 3</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/gn-math67/gn-math1?authuser=0" target="_blank">GN Math 4</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/gn-math67/gn-math2?authuser=0" target="_blank">GN Math 5</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/site/unblockedgame67/" target="_blank">Unblocked Games 67</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/classroom.center/view/" target="_blank">Unblocked Games G+</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/site/unblockedgames77/freezenova?authuser=0" target="_blank">Unblocked Games 77</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/classroom66/?authuser=0" target="_blank">Unblocked Games 667</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://bookblooom.netlify.app/" target="_blank">BookBloom</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://learn-sphere.info/" target="_blank">BookBloom 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/fus3-bomb/gm43s" target="_blank">Bomb Games</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/noahs-tutoring-hub" target="_blank">Noah's Tutoring games</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://bestclass.global.ssl.fastly.net/index.html" target="_blank">FreezeNova</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/freezenova/" target="_blank">FreezaNova 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/site/allfunblockedgames/home?authuser=0" target="_blank">FunBlocked</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/nghhub/home?authuser=0" target="_blank">NGH Unblocked games</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/squarecode/home?authuser=0" target="_blank">SquareCode</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/bypass-central/home?authuser=0" target="_blank">B-Central</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/aldensgames/home?authuser=0" target="_blank">Aldens Unblocked games</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://download.brightpathlearning.website/" target="_blank">Waves Unblocked game</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://meowmeow.polden21vek.com/" target="_blank">Waves Unblocked game 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://assignments.cinosargoediciones.com/" target="_blank">Waves Unblocked game 3</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/site/unblockedgamestop" target="_blank">Unblocked games stop</a>
     </div>
 
-    <div class="game-box">
-        <a href="https://www.transum.org/Maths/Game/Tetris/" target="_blank">Tetris</a>
-    </div>
-
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://classroom6x.us.com/" target="_blank">Classroom 6x</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/unblockedgame/home" target="_blank">classroom 6x 2</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href="https://sites.google.com/view/classroom6x/" target="_blank">Classroom 6x 3</a>
     </div>
 
-    <div class="game-box">
+    <div class="game-box" data-type="websites">
         <a href=""https://sites.google.com/view/rbsug" target="_blank">Rb's Unblocked Games</a>
     </div>
 
@@ -324,6 +383,84 @@ body.dark-mode .dropdown-item {
 </script>
 
 <script>
+
+let currentSection = "games";
+
+
+document.querySelectorAll('.game-box a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const box = this.closest('.game-box');
+        if (box.dataset.type === "games") {
+            // Only embed games
+            e.preventDefault(); // stop default navigation
+            const url = this.dataset.url;
+            document.getElementById("viewer").style.display = "block";
+            document.getElementById("embedFrame").src = url;
+        }
+
+    });
+});
+
+document.getElementById('openSiteBlankBtn').addEventListener('click', () => {
+    // Open a blank tab first
+    const newTab = window.open('about:blank', '_blank');
+
+    // Write a full-page iframe pointing to your site
+    newTab.document.write(`
+        <html>
+        <head>
+            <title>about:blank</title>
+            <style>
+                body { margin:0; overflow:hidden; }
+                iframe { width:100vw; height:100vh; border:none; }
+            </style>
+        </head>
+        <body>
+            <iframe src="https://flaretag.xyz/"></iframe>
+        </body>
+        </html>
+    `);
+
+    newTab.document.close();
+});
+
+// Back button
+document.getElementById('backBtn').addEventListener('click', () => {
+    closeViewer();
+});
+
+// Full Screen button
+document.getElementById('fullScreenBtn').addEventListener('click', () => {
+    const iframe = document.getElementById('embedFrame');
+    if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) { /* Safari */
+        iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) { /* IE11 */
+        iframe.msRequestFullscreen();
+    }
+});
+
+// About:Blank button
+document.getElementById('aboutBlankBtn').addEventListener('click', () => {
+    const url = document.getElementById('embedFrame').src;
+    if(!url) return;
+
+    // Open a new blank tab
+    const newTab = window.open('about:blank', '_blank');
+
+    // Inject the game iframe into the new tab
+    newTab.document.write(`
+        <html>
+        <head><title>about:blank</title></head>
+        <body style="margin:0; overflow:hidden;">
+            <iframe src="${url}" style="width:100vw; height:100vh; border:none;"></iframe>
+        </body>
+        </html>
+    `);
+    newTab.document.close();
+});
+
 // Moving lines effect
 const container = document.querySelector('.lines');
 function createLine() {
@@ -418,11 +555,18 @@ document.getElementById('cloakTabBtn').addEventListener('click', () => {
 });
 
 const gameSearchInput = document.getElementById('gameSearch');
+
 gameSearchInput.addEventListener('input', () => {
     const filter = gameSearchInput.value.toLowerCase();
+
     document.querySelectorAll('.game-box').forEach(box => {
-        const text = box.textContent.toLowerCase();
-        box.style.display = text.includes(filter) ? '' : 'none';
+        if (box.dataset.type === currentSection) {
+            const link = box.querySelector('a');
+            const text = link ? link.textContent.trim().toLowerCase() : "";
+            box.style.display = text.includes(filter) ? "block" : "none";
+        } else {
+            box.style.display = "none";
+        }
     });
 });
 
@@ -449,7 +593,32 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+function openGame(url) {
+    document.getElementById("viewer").style.display = "block";
+    document.getElementById("embedFrame").src = url;
+}
+
+function closeViewer() {
+    document.getElementById("viewer").style.display = "none";
+    document.getElementById("embedFrame").src = "";
+}
+
+function showSection(section) {
+    currentSection = section;
+
+    const boxes = document.querySelectorAll(".game-box");
+    boxes.forEach(box => {
+        if (box.dataset.type === section) {
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
+        }
+    });
+
+    // Clear search when switching tabs
+    document.getElementById("gameSearch").value = "";
+}
 </script>
 </body>
 </html>
-
