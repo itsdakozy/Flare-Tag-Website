@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Google Classroom</title>
+    <title>Famus</title>
     <style>
         html, body {
             overflow: auto;  
@@ -192,6 +192,30 @@
     background: rgba(255,255,255,0.2); /* hover effect */
 }
 
+.socials {
+    position: fixed;
+    top: 70px;  /* slightly below the gear icon */
+    right: 20px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 2500;
+}
+
+.socials span {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+body.dark-mode .socials {
+    background: rgba(34,34,34,0.95);
+    border-color: #555;
+    color: #e0e0e0;
+}
+
 body.dark-mode .dropdown-item {
     border-color: #555;
     background: rgba(255,255,255,0.05);
@@ -200,6 +224,8 @@ body.dark-mode .dropdown-item {
     </style>
 </head>
 <body>
+
+<link rel="icon" type="image/png" href="pfp.png" />
 
 <!-- Top Navigation -->
 <div class="top-nav">
@@ -243,6 +269,18 @@ body.dark-mode .dropdown-item {
         <button id="openSiteBlankBtn">Open in About:Blank</button>
     </div>
 
+</div>
+
+<div class="socials">
+    <span>Our Socials</span>
+    <div style="display:flex; gap:10px; margin-top:5px;">
+        <a href="https://discord.gg/jX42PRtcEN" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord" style="width:24px; height:24px;">
+        </a>
+        <a href="https://www.tiktok.com/@exavk" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" style="width:24px; height:24px;">
+        </a>
+    </div>
 </div>
 
 <div style="text-align:center; margin:20px 0;">
