@@ -72,6 +72,30 @@
     text-decoration: underline;
 }
 
+/* FAMUS intro image */
+#introLogo{
+    position:absolute;
+    top:60px;
+    left:50%;
+    transform:translateX(-50%);
+    width:350px;
+    opacity:1;
+    transition:1s;
+}
+
+/* start position for slide */
+.slideStart{
+    transform:translateY(-120px);
+    opacity:0;
+}
+
+/* end position */
+.slideEnd{
+    transform:translateY(0px);
+    opacity:1;
+    transition:1s;
+}
+
 #viewer {
     position: fixed;
     top: 50px;
@@ -177,6 +201,8 @@ body.dark-mode .dropdown-item {
 </head>
 <body>
 
+<img id="introLogo" src="favicon.png">
+
 <!-- Top Navigation -->
 <div class="top-nav">
     <button onclick="showSection('games')">Games</button>
@@ -193,7 +219,7 @@ body.dark-mode .dropdown-item {
 
 <div class="lines"></div>
 
-<h1>Famus</h1>
+<h1 id="mainTitle" class="slideStart">Famus</h1>
 
 <div class="settings">&#9881;</div> <!-- gear icon -->
 
