@@ -658,12 +658,18 @@ darkModeToggle.addEventListener('change', () => {
 
 // Cloak Tab (just change tab title)
 document.getElementById('cloakTabBtn').addEventListener('click', () => {
-    document.title = 'Google Classroom'; // tab title
+    // Change tab title
+    document.title = 'Google Classroom';
+
+    // Change favicon to Google
     let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
     link.type = 'image/x-icon';
     link.rel = 'shortcut icon';
     link.href = 'https://www.google.com/favicon.ico'; // Google favicon
     document.getElementsByTagName('head')[0].appendChild(link);
+
+    // No need to save in localStorage or cookies
+    // Refreshing the page will load the original favicon automatically
 });
 
 const gameSearchInput = document.getElementById('gameSearch');
